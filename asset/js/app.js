@@ -119,15 +119,7 @@ function Controler(graph) {
   this.initEvents = function() {
     var me = this;
 
-    /**
-     * Click on button clear all forbidden roads
-     * @param  {[type]} e [description]
-     * @return {[type]}   [description]
-     */
-    $(this.buttonClearAllForbiddenRoads).on('click', function(e){
-      me.clearForbiddenRoads();
-      me.drawList();
-    });
+
 
     /**
      * Click button define as starting point
@@ -171,6 +163,25 @@ function Controler(graph) {
       me.restoreDefaultColors();
       me.drawReachablePoints(reachablePoints, me.selectedObject);
       me.populateReachablePoints(reachablePoints, me.selectedObject);
+    });
+
+
+    /**
+     * Click on button clear all forbidden roads
+     * @param  {[type]} e [description]
+     * @return {[type]}   [description]
+     */
+    $(this.buttonClearAllForbiddenRoads).on('click', function(e){
+      me.clearForbiddenRoads();
+
+      $.each(me.contentSelectAllFromTypeList.find('.active'), function(i, e){
+        console.log(e);
+        $(e).removeClass("active");
+      });
+      // .find('.active', function(e){
+        // console.log(e);
+      // });
+      me.drawList();
     });
 
     /**
