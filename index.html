@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <title>AG44</title>
+  <meta charset="utf-8" />
+
+  <link rel="stylesheet" type="text/css" href="asset/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="asset/css/app.css">
+  <script src="asset/js/jquery.js"></script>
+  <script src="asset/js/arbor.js"></script>
+  <script src="asset/js/jquery.tmpl.js"></script>
+  <script src="asset/js/bootstrap.js"></script>
+  <script src="asset/js/cytoscape.js"></script>
+
+  <style>
+  body { 
+    font: 14px helvetica neue, helvetica, arial, sans-serif;
+  }
+
+  #cy {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+
+    background-color: #2E3944;
+  }
+
+  #left {
+    position: absolute;
+    z-index: 9999;
+    width: 250px;
+    top: 5px;
+    left: 5px;
+    max-height: 100%;
+    overflow: scroll;
+  }
+
+  #left::-webkit-scrollbar {
+    height: 0px;
+    width: 0px;
+    background: #000;
+  }
+
+  .forbiddenlist {
+    position: absolute;
+    z-index: 9999;
+    width: 250px;
+    top: 5px;
+    right: 5px;
+  }
+
+  .loading-area {
+    position: absolute;
+    z-index: 9999;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    text-align: center;
+    background-color: #2E3944;
+  }
+
+  .loading-area h1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -60px;
+    margin-left: -300px;
+    color: white;
+  }
+  </style>
+
+
+  <script type="text/x-jquery-tmpl" id="template-solution-point">
+    <li class="point">
+      <span class="point">${number}</span>
+      <p class="labelPoint">${name}<br/>${altitude}m</p>
+    </li>
+  </script>
+
+  <script type="text/x-jquery-tmpl" id="template-solution-route">
+    <li class="arrow">
+      <p><strong>${name}</strong></p>
+      <span class="label" style="background-color: ${color.value}">${type} - ${color.legend}</span>
+      <p>Distance : ${distance}m <br/>
+        Time : ${time}min
+      </p>
+    </li>
+  </script>
+
+  <script type="text/x-jquery-tmpl" id="template-selected-point">
+    <span class="point">${number}</span>
+    <span class="point-label">${name}</span>
+  </script>
+
+  <script type="text/x-jquery-tmpl" id="template-route-list">
+    <li class="list-group-item">
+      <span>${name}</span><span class="label label-success pull-right" style="background-color: ${color.value}">${color.legend}</span>
+    </li>
+  </script>
+
+  <script type="text/x-jquery-tmpl" id="template-route">
+  <div class="panel panel-primary">
+
+  <div class="panel-heading">
+  <h3 class="panel-title"><span>${name}</span><span class="label label-success pull-right">road</span>
+  </h3>
+  </div>
+  <div class="panel-body">
+  <table class="table table-condensed">
+  <tr>
+  <td colspan="2" class="text-center"><strong>Starting point</strong></td>
+  </tr>
+  <tr> 
+  <td>Name</td>
+  <td>${startingPoint.name}</td>
+  </tr>
+  <tr>
+  <td>Elevation</td>
+  <td><span>${startingPoint.altitude}</span>m</td>
+  </tr>
+
+  <tr>
+  <td colspan="2" class="text-center"><strong>Arrival point</strong></td>
+  </tr>
+  <tr> 
+  <td>Name</td>
+  <td>${arrivalPoint.name}</td>
+  </tr>
+  <tr>
+  <td>Elevation</td>
+  <td><span>${arrivalPoint.altitude}</span>m</td>
+  </tr>
+  <tr>
+  <td colspan="2" class="text-center"><strong>Informations</strong></td>
+  </tr>
+  <tr> 
+  <td>Distance</td>
+  <td><span>${distance}</span>m</td>
+  </tr>
+  <tr>
+  <td>Time</td>
+  <td><span>${time}</span>mn</td>
+  </tr>
+  <tr>
+  <td>Type</td>
+  <td><span>${type}</span><span class="label label-success pull-right" style="background-color: ${color.value}">${color.legend}</span></td>
+  </tr>
+  </table>
+  </div>
+  <div class="panel-footer text-center">
+  <button class="btn btn-default tip" id="addToForbiddenList" data-toggle="tooltip" data-placement="bottom" data-original-title="Ajouter aux pistes interdites"><span class="glyphicon glyphicon-ban-circle"></span></button>
+  </div>
+  </div>
+  </script>
+
+
+  <script type="text/x-jquery-tmpl" id="template-point">
+  <div class="panel panel-primary">
+  <div class="panel-heading">
+  <h3 class="panel-title"><span>${name}</span><span class="label label-danger pull-right">point</span>
+  </h3>
+  </div>
+  <div class="panel-body">
+  <p>Elevation : <span>${altitude}</span>m</p>
+  <ul class="reachablePoints">
+    
+  </ul>
+  </div>
+  <div class="panel-footer text-center">
+  <button class="btn btn-default tip" id="defineRoadAsStartingPoint" data-toggle="tooltip" data-placement="bottom" data-original-title="Define as starting point"><span class="glyphicon glyphicon-arrow-up"></span></button>
+  <button class="btn btn-default tip" id="defineRoadAsArrivalPoint" data-toggle="tooltip" data-placement="bottom" data-original-title="Define as arrival point"><span class="glyphicon glyphicon-arrow-down"></span></button>
+  <button class="btn btn-primary tip" id="showReachablePoints" data-toggle="tooltip" data-placement="bottom" data-original-title="Display reachable points on the graph"><span class="glyphicon glyphicon-certificate"></span></button>
+  </div>
+
+  </div>
+  </div>
+  </script>
+
+  <script type="text/x-jquery-tmpl" id="template-alert">
+  <div class="alert alert-danger fade in">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+  <h4>${title}</h4>
+  <p>${message}</p>
+  </div>
+  </script>
+
+</head>
+<body>
+
+  <div class="loading-area">
+    <h1>Rendering layout... Please wait...</h1>
+  </div>
+
+
+  <div id="alert-content"></div>
+  <section id="left"> 
+
+    <article id="shortestpath">
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <h3 class="panel-title">Shortest path</span>
+          </h3>
+        </div>
+        <div class="panel-body no-padding">
+          <div id="content-points">
+            <div class="point-container">
+              <p class="text-center">
+                <strong>Start</strong>
+              </p>  
+              <div id="content-starting-road"></div>
+            </div>
+            <div class="point-container">
+              <p class="text-center">
+                <strong>Arrival</strong>
+              </p> 
+              <div id="content-arrival-road"></div> 
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer text-center">
+          <button 
+          class="btn btn-danger tip" 
+          data-toggle="tooltip" 
+          id="buttonComputeShortestPath" 
+          data-placement="bottom" 
+          data-original-title="start algorithm"
+          >
+          <span class="glyphicon glyphicon-expand"></span> compute</button>
+        </div>
+      </div>
+    </article> 
+    <article id="selection">
+    </article>  
+  </section>
+
+  <section class="forbiddenlist">
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title">Forbidden list</span>
+        </h3>
+      </div>
+      <div class="panel-body no-padding">
+        <ul class="list-group" id="forbiddenlist"></ul>
+      </div>
+      <div class="panel-footer text-center">
+        <button class="btn btn-default tip" id="clearAllForbiddenRoads" data-toggle="tooltip" data-placement="bottom" data-original-title="Clear all"><span class="glyphicon glyphicon-ban-circle"></span></button>
+        <div class="btn-group">
+          <button class="btn btn-default btn-md dropdown-toggle" type="button" data-toggle="dropdown">
+            Toggle All from type <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" id="selectAllFromType" role="menu">
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <div id="cy"></div>
+
+  <section id="solution" class="text-center">
+
+    <ul>
+
+    
+    </ul>
+
+  </section>
+
+  <script type="text/javascript" src="asset/js/cytoscape.config.js"></script>
+
+  <script type="text/javascript" src="asset/js/Graph.js"></script>
+  <script type="text/javascript" src="asset/js/Point.js"></script>
+  <script type="text/javascript" src="asset/js/Route.js"></script>
+  <script type="text/javascript" src="asset/js/Floyd.js"></script>
+  <script type="text/javascript" src="asset/js/DFS.js"></script>
+
+
+  <script type="text/javascript" src="asset/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+
+
+body { 
+  font: 14px helvetica neue, helvetica, arial, sans-serif;
+
+}
+
+#canvas {
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background-color: #222;
+}
+
+
+.no-padding {
+  padding: 0;
+}
+
+#content-points {
+  display: table;
+  width: 100%;
+}
+
+.point-container {
+  display: table-cell;
+  width: 50%;
+}
+
+#alert-content {
+  position: absolute;
+  z-index: 999;
+  width: 20%;
+  top: 50%;
+  left: 50%;
+  margin-left: -10%;
+
+}
+
+#solution {
+  z-index: 999;
+  bottom: 0;
+   left: 0;
+  right: 0;
+  height: 100px;
+  position: absolute;
+  border-top: solid 1px #14181D;
+  width: 100%;
+
+  background-color: #1C2229;
+}
+
+#solution li {
+  display: inline-block;
+  vertical-align: top;
+}
+
+
+#solution li.arrow {
+  color: white;
+  margin: 0 20px;
+}
+
+#solution li.arrow p {
+  margin: 0;
+}
+
+#solution li.arrow span {
+  color: white;
+}
+
+
+#solution li .labelPoint {
+  color: white;
+}
+
+
+#solution li.totalTime {
+  color: white;
+  font-size: 18px;
+  line-height: 25px;
+  vertical-align: middle;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 30px;
+  margin-left: 30px;
+}
+
+.forbiddenlist .panel-body {
+  max-height: 200px;
+  overflow: scroll;
+}
+
+.point-container {
+  text-align: center;
+}
+span.point {
+  background-color: #A72F43;
+  border: solid 2px #930607;
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  color: white;
+  line-height: 26px;
+  font-size: 16px;
+  text-align: center;
+  margin: 10px auto;
+}
+
+span.point-label {
+  text-align: center;
+}

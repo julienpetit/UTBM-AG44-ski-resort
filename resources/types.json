@@ -1,0 +1,68 @@
+{
+  "V": {
+    "static" : 0,
+    "variable" : 5,
+    "color" : "#A4C634",
+    "legend" : "green piste"
+  },
+  "B": {
+    "static" : 0,
+    "variable" : 4,
+    "color" : "#62A3E0",
+    "legend" : "blue piste"
+  },
+  "R": {
+    "static" : 0,
+    "variable" : 3,
+    "color" : "#E33D63",
+    "legend" : "red piste"
+  },
+  "N": {
+    "static" : 0,
+    "variable" : 2,
+    "color" : "#000",
+    "legend" : "black piste"
+  },
+  "KL": {
+    "static" : 0,
+    "variable" : 10,
+    "color" : "#333",
+    "legend" : "track skiing"
+  },
+  "SURF": {
+    "static" : 0,
+    "variable" : 10,
+    "color" : "#333",
+    "legend" : "surfing area"
+  },
+  "TPH": {
+    "static" : 4,
+    "variable" : 2,
+    "color" : "#333",
+    "legend" : "telepheric" 
+  },
+  "TC": {
+    "static" : 2,
+    "variable" : 3,
+    "color" : "#333",
+    "legend" : "cabin" 
+  },
+  "TSD": {
+    "static" : 1,
+    "variable" : 3,
+    "color" : "#333",
+    "legend" : "special chair lift" 
+  },
+  "TS": {
+    "static" : 1,
+    "variable" : 4,
+    "color" : "#333",
+    "legend" : "chair lift" 
+  },
+  "TK": {
+    "static" : 1,
+    "variable" : 2,
+    "color" : "#333",
+    "legend" : "ski lift" 
+  }
+}

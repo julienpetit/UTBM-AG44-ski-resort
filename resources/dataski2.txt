@@ -1,0 +1,14 @@
+5
+1	villaroger	1200		
+2	2	1425		
+3	3	2135		
+4	4	2458		
+5	aiguille-rouge	3226				
+7
+1	aiguille-rouge	TPH	1	5
+2	aiguille-rouge1	N	1	5
+3	aiguille-rouge1	N	1	5
+4	aiguille-rouge1	N	1	5
+5	aiguille-rouge2	N	4	3
+6	aiguille-rouge3	N	3	2
+7	aiguille-rouge4	N	2	1
