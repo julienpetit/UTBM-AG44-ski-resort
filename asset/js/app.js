@@ -30,7 +30,6 @@ function Controler(graph) {
   this.contentSelectAllFromTypeList = $('#selectAllFromType');
   this.contentReachablePoints = '.reachablePoints';
 
-  this.contentSolution = $('#solution');
   this.contentAlert = $('#alert-content');
 
   this.buttonAddToForbiddenList = "#addToForbiddenList";
@@ -41,7 +40,7 @@ function Controler(graph) {
   this.buttonClearAllForbiddenRoads = "#clearAllForbiddenRoads";
   this.buttonShowReachablePoints = "#showReachablePoints";
 
-
+  this.contentLoading = $(".loading");
 
   this.selectedObject = null;
 
@@ -104,6 +103,16 @@ function Controler(graph) {
     this.createListSelectAllFromTypeList();
 
     this.initEvents();
+    this.initFlyEvents();
+  };
+
+  this.setLoading = function(loading) {
+
+    console.log('set Loading : ' + loading);
+    if(loading == true)
+      this.contentLoading.fadeIn();
+    else
+      this.contentLoading.fadeOut();
   };
 
   this.createListSelectAllFromTypeList = function() {
@@ -116,12 +125,9 @@ function Controler(graph) {
     this.forbiddenRoads = [];
   };
 
-  this.initEvents = function() {
-    var me = this;
 
-
-
-    /**
+  this.initFlyEvents = function() {
+     /**
      * Click button define as starting point
      * @param  {[type]} e [description]
      * @return {[type]}   [description]
@@ -165,6 +171,10 @@ function Controler(graph) {
       me.populateReachablePoints(reachablePoints, me.selectedObject);
     });
 
+  };
+  this.initEvents = function() {
+    var me = this;
+
 
     /**
      * Click on button clear all forbidden roads
@@ -197,6 +207,8 @@ function Controler(graph) {
 
     $(this.buttonAddTypeToForbiddenList).on('click', function(e){
       e.preventDefault();
+      console.log('Event : click item piste toggle');
+
 
       var target = $(e.currentTarget);
 
@@ -274,7 +286,9 @@ function Controler(graph) {
     var me = this;
 
     console.log('total time : ' + totalTime + "min");
-    this.contentSolution.find('ul').html("");
+    var contentSolution = $('<div id="solution" class="text-center"><a class="close" href="#" aria-hidden="true">&times;</a><ul></ul></div>');
+    contentSolution.find('.close').on('click', function(e) { $(e.currentTarget).parent().fadeOut(1000, function() { $(e.currentTarget).parent().remove(); });  });
+    contentSolution.find('ul').html("");
 
     for( var i = 0; i < path.length - 1; i++) {
       var startingPointNumber = parseInt(path[i]);
@@ -282,25 +296,25 @@ function Controler(graph) {
 
       graph.routes.forEach(function(route){
         if(route.startingPoint.number == startingPointNumber && route.arrivalPoint.number == arrivalPointNumber) {
-          me.contentSolution.find('ul').append($('#template-solution-point').tmpl(route.startingPoint));
-          me.contentSolution.find('ul').append($('#template-solution-route').tmpl(route));
-
-
+          contentSolution.find('ul').append($('#template-solution-point').tmpl(route.startingPoint));
+          contentSolution.find('ul').append($('#template-solution-route').tmpl(route));
         }
 
       });
     }
-    me.contentSolution.find('ul').append($('#template-solution-point').tmpl(graph.getPoint({ key: 'number', value: parseInt(path[path.length - 1])})));
+    contentSolution.find('ul').append($('#template-solution-point').tmpl(graph.getPoint({ key: 'number', value: parseInt(path[path.length - 1])})));
 
-    me.contentSolution.find('ul').append('<li class="totalTime">Total time : ' + totalTime + 'min</li>');
+    contentSolution.find('ul').append('<li class="totalTime">Total time : ' + totalTime + 'min</li>');
 
+    $('body').append(contentSolution);
+    contentSolution.fadeIn();
   };
 
   this.populateReachablePoints = function( reachablePoints, startingPoint ) {
     $(this.contentReachablePoints).html("");
     var me = this;
     reachablePoints.forEach(function(point) {
-      $(me.contentReachablePoints).append('<li>' + point.name + '</li>');
+      $(me.contentReachablePoints).append($("#template-point-list").tmpl(point));
     });
   };
 
@@ -356,7 +370,10 @@ function Controler(graph) {
 
   var me = this;
   $(this.buttonComputeShortestPath).on('click', function(e){
-
+    console.log('Event : compute shortest path');
+    
+    me.setLoading(true);
+    
     if(me.selectedPoints[0] == null || me.selectedPoints[1] == null) {
       me.contentAlert.html($('#template-alert').tmpl({ title : "Error", message: "You must select a starting point and an arrival point to compute the shortest path algorithm"}));
     } else if(me.selectedPoints[0] == me.selectedPoints[1]) {
@@ -382,7 +399,10 @@ function Controler(graph) {
       var g = Graph.generateGraphPath(me.currentGraph, path);
       me.drawPath(g[0], path);
       me.drawSolution(g[0], path, g[1]);
+
     } 
+
+    me.setLoading(false);
   });
 }
 
@@ -398,7 +418,7 @@ initEvents = function(){
 
     $('.tip').tooltip({});
     controler.selectedObject = e.cyTarget.data("object");
-    controler.initEvents();
+    controler.initFlyEvents();
   });
 
   cy.edges().bind("select", function(e){
@@ -407,7 +427,7 @@ initEvents = function(){
 
     $('.tip').tooltip({});
     controler.selectedObject = e.cyTarget.data("object");
-    controler.initEvents();
+    controler.initFlyEvents();
   });
 };
 

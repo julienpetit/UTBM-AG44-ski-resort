@@ -19,13 +19,6 @@
   }
 
   #cy {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    z-index: 1;
-    left: 0;
-    top: 0;
-
     background-color: #2E3944;
   }
 
@@ -43,14 +36,6 @@
     height: 0px;
     width: 0px;
     background: #000;
-  }
-
-  .forbiddenlist {
-    position: absolute;
-    z-index: 9999;
-    width: 250px;
-    top: 5px;
-    right: 5px;
   }
 
   .loading-area {
@@ -100,6 +85,12 @@
   <script type="text/x-jquery-tmpl" id="template-route-list">
     <li class="list-group-item">
       <span>${name}</span><span class="label label-success pull-right" style="background-color: ${color.value}">${color.legend}</span>
+    </li>
+  </script>
+
+  <script type="text/x-jquery-tmpl" id="template-point-list">
+    <li class="list-group-item">
+      <span>${name} - ${altitude}</span>
     </li>
   </script>
 
@@ -167,7 +158,8 @@
   </div>
   <div class="panel-body">
   <p>Elevation : <span>${altitude}</span>m</p>
-  <ul class="reachablePoints">
+  <p>Reachable points</p>
+  <ul class="list-group reachablePoints">
     
   </ul>
   </div>
@@ -192,13 +184,14 @@
 </head>
 <body>
 
-  <div class="loading-area">
+<!--   <div class="loading-area">
     <h1>Rendering layout... Please wait...</h1>
-  </div>
-
+  </div> -->
 
   <div id="alert-content"></div>
-  <section id="left"> 
+
+
+  <section class="column-left"> 
 
     <article id="shortestpath">
       <div class="panel panel-success">
@@ -238,39 +231,35 @@
     </article>  
   </section>
 
-  <section class="forbiddenlist">
-    <div class="panel panel-danger">
-      <div class="panel-heading">
-        <h3 class="panel-title">Forbidden list</span>
-        </h3>
-      </div>
-      <div class="panel-body no-padding">
-        <ul class="list-group" id="forbiddenlist"></ul>
-      </div>
-      <div class="panel-footer text-center">
-        <button class="btn btn-default tip" id="clearAllForbiddenRoads" data-toggle="tooltip" data-placement="bottom" data-original-title="Clear all"><span class="glyphicon glyphicon-ban-circle"></span></button>
-        <div class="btn-group">
-          <button class="btn btn-default btn-md dropdown-toggle" type="button" data-toggle="dropdown">
-            Toggle All from type <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" id="selectAllFromType" role="menu">
-          </ul>
+  <div class="column-right">
+    <section class="forbiddenlist">
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          <h3 class="panel-title">Forbidden list</span>
+          </h3>
+        </div>
+        <div class="panel-body no-padding">
+          <ul class="list-group" id="forbiddenlist"></ul>
+        </div>
+        <div class="panel-footer text-center">
+          <button class="btn btn-default tip" id="clearAllForbiddenRoads" data-toggle="tooltip" data-placement="bottom" data-original-title="Clear all"><span class="glyphicon glyphicon-ban-circle"></span></button>
+          <div class="btn-group">
+            <button class="btn btn-default btn-md dropdown-toggle" type="button" data-toggle="dropdown">
+              Toggle All from type <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" id="selectAllFromType" role="menu">
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 
+  <div class="column-center" id="cy"></div>
 
-  <div id="cy"></div>
+  <div class="loading">
 
-  <section id="solution" class="text-center">
-
-    <ul>
-
-    
-    </ul>
-
-  </section>
+  </div>
 
   <script type="text/javascript" src="asset/js/cytoscape.config.js"></script>
 
