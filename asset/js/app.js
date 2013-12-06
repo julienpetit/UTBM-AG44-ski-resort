@@ -171,6 +171,15 @@ function Controler(graph) {
       me.populateReachablePoints(reachablePoints, me.selectedObject);
     });
 
+    /**
+     * Click button add to forbidden list
+     * @param  {[type]} e [description]
+     * @return {[type]}   [description]
+     */
+    $(this.buttonAddToForbiddenList).on('click', function(e){
+      me.addToForbiddenList(me.selectedObject);
+      me.drawList();
+    });
   };
   this.initEvents = function() {
     var me = this;
@@ -191,16 +200,6 @@ function Controler(graph) {
       // .find('.active', function(e){
         // console.log(e);
       // });
-      me.drawList();
-    });
-
-    /**
-     * Click button add to forbidden list
-     * @param  {[type]} e [description]
-     * @return {[type]}   [description]
-     */
-    $(this.buttonAddToForbiddenList).on('click', function(e){
-      me.addToForbiddenList(me.selectedObject);
       me.drawList();
     });
 
@@ -372,8 +371,8 @@ function Controler(graph) {
   $(this.buttonComputeShortestPath).on('click', function(e){
     console.log('Event : compute shortest path');
     
-    me.setLoading(true);
-    
+    // me.setLoading(true);
+
     if(me.selectedPoints[0] == null || me.selectedPoints[1] == null) {
       me.contentAlert.html($('#template-alert').tmpl({ title : "Error", message: "You must select a starting point and an arrival point to compute the shortest path algorithm"}));
     } else if(me.selectedPoints[0] == me.selectedPoints[1]) {
@@ -402,7 +401,7 @@ function Controler(graph) {
 
     } 
 
-    me.setLoading(false);
+    // me.setLoading(false);
   });
 }
 
